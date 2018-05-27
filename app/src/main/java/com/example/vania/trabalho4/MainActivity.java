@@ -1,10 +1,14 @@
 package com.example.vania.trabalho4;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextPassword;
     Button buttonLogin;
     GenerateDatabase sqliteHelper;
+    GesDatabase gesdatabase;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -28,9 +36,15 @@ public class MainActivity extends AppCompatActivity {
 
         sqliteHelper = new GenerateDatabase(this);
 
-        initViews();
-
+        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
+        buttonLogin = (Button) findViewById(R.id.buttonLogin);
         //set click event of login button
+        addUser();
+
+        gesdatabase.obterTodosUsers();
+        Log.d("USer", gesdatabase.obterTodosUsers().toString());
+
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
 
@@ -41,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 String Password = editTextPassword.getText().toString();
 
                 if(isValidEmail(Email)) {
+
+
 
                     Context context = getApplicationContext();
                     CharSequence text = "Entra aqui!";
@@ -89,14 +105,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    private void addUser(){
+        User newuser = new User(null, "vania", "vania@gmail.com", "12345");
 
-    //this method is used to connect XML views to its Objects
-    private void initViews() {
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        buttonLogin = (Button) findViewById(R.id.buttonLogin);
+
+        gesdatabase.addUser(newuser);
+
 
     }
+
+
     private boolean isValidEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();

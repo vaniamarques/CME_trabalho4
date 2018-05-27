@@ -46,53 +46,8 @@ public class GenerateDatabase extends SQLiteOpenHelper {
 
 
 
-    public void addUser(User user) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
 
 
-        ContentValues values = new ContentValues();
-
-        values.put("username", user.userName);
-        values.put("email", user.email);
-        values.put("password", user.password);
-
-        long todo_id = db.insert("users", null, values);
-    }
-
-    public User Authenticate(User user) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query("users",
-                new String[]{"id", "name", "email", "password"},
-                "email" + "=?",
-                new String[]{user.email},//Where clause
-                null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()&& cursor.getCount()>0) {
-            User user1 = new User(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
-
-            if (user.password.equalsIgnoreCase(user1.password)) {
-                return user1;
-            }
-        }
-        return null;
-    }
-
-    public boolean isEmailExists(String email) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query("users",// Selecting Table
-                new String[]{"id", "name", "email", "password"},
-                "email" + "=?",
-                new String[]{email},//Where clause
-                null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()&& cursor.getCount()>0) {
-
-            return true;
-        }
-
-        return false;
-    }
 
 }
 
