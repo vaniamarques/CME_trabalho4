@@ -131,7 +131,7 @@ public class GesDatabase {
     public User Authenticate(User user) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query("users",
-                new String[]{"id", "name", "email", "password"},
+                new String[]{"id", "username", "email", "password"},
                 "email" + "=?",
                 new String[]{user.email},//Where clause
                 null, null, null);

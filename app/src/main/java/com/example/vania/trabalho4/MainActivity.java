@@ -28,11 +28,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        gesdatabase = new GesDatabase(this);
 
         sqliteHelper = new GenerateDatabase(this);
 
@@ -42,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
         //set click event of login button
         addUser();
 
-        gesdatabase.obterTodosUsers();
-        Log.d("USer", gesdatabase.obterTodosUsers().toString());
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,10 +56,16 @@ public class MainActivity extends AppCompatActivity {
 
                 if(isValidEmail(Email)) {
 
-
-
+                    CharSequence text ;
+                    User currentUser = gesdatabase.Authenticate(new User(null, null, Email, Password));
+                    if(currentUser!=null) {
+                        text = "entra";
+                    }
+                    else{
+                        text = "deu erro";
+                    }
                     Context context = getApplicationContext();
-                    CharSequence text = "Entra aqui!";
+
                     int duration = Toast.LENGTH_SHORT;
 
                     Toast toast = Toast.makeText(context, text, duration);
@@ -77,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                /* if (validate()) {
 
 
-                    User currentUser = sqliteHelper.Authenticate(new User(null, null, Email, Password));
+
 
                     if (currentUser != null) {
                         Context context = getApplicationContext();
@@ -109,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         User newuser = new User(null, "vania", "vania@gmail.com", "12345");
 
 
-        gesdatabase.addUser(newuser);
+       gesdatabase.addUser(newuser);
 
 
     }
