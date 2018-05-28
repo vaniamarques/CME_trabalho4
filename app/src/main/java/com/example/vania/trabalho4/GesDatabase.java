@@ -120,7 +120,7 @@ public class GesDatabase {
 
 
     public Cursor obterTodosUsers() {
-        String[] colunas = new String[6];
+        String[] colunas = new String[4];
         colunas[0] = "id";
         colunas[1] = "username";
         colunas[2] = "email";
@@ -133,7 +133,7 @@ public class GesDatabase {
         Cursor cursor = db.query("users",
                 new String[]{"id", "username", "email", "password"},
                 "email" + "=?",
-                new String[]{user.email},//Where clause
+                new String[]{user.email},
                 null, null, null);
 
         if (cursor != null && cursor.moveToFirst()&& cursor.getCount()>0) {
@@ -149,7 +149,7 @@ public class GesDatabase {
     public boolean isEmailExists(String email) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query("users",// Selecting Table
-                new String[]{"id", "name", "email", "password"},
+                new String[]{"id", "username", "email", "password"},
                 "email" + "=?",
                 new String[]{email},//Where clause
                 null, null, null);

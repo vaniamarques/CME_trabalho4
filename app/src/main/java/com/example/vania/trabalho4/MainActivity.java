@@ -1,6 +1,7 @@
 package com.example.vania.trabalho4;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,12 +17,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.regex.Pattern;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 
 public class MainActivity extends AppCompatActivity {
     EditText editTextEmail;
     EditText editTextPassword;
+    TextView createAccount;
     Button buttonLogin;
     GenerateDatabase sqliteHelper;
     GesDatabase gesdatabase;
@@ -38,12 +44,22 @@ public class MainActivity extends AppCompatActivity {
 
         sqliteHelper = new GenerateDatabase(this);
 
+        createAccount = (TextView) findViewById(R.id.createAccount);
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
         //set click event of login button
-        addUser();
 
+
+        createAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+
+                startActivity(intent);
+
+            }
+        });
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,20 +72,23 @@ public class MainActivity extends AppCompatActivity {
 
                 if(isValidEmail(Email)) {
 
-                    CharSequence text ;
+
                     User currentUser = gesdatabase.Authenticate(new User(null, null, Email, Password));
                     if(currentUser!=null) {
-                        text = "entra";
+                        Intent intent = new Intent(MainActivity.this, ListExpenseActivity.class);
+                        startActivity(intent);
                     }
                     else{
+                        CharSequence text ;
                         text = "deu erro";
+                        Context context = getApplicationContext();
+
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
-                    Context context = getApplicationContext();
 
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
                 }
                 else{
                     Context context = getApplicationContext();
@@ -80,30 +99,6 @@ public class MainActivity extends AppCompatActivity {
                     toast.show();
                 }
 
-               /* if (validate()) {
-
-
-
-
-                    if (currentUser != null) {
-                        Context context = getApplicationContext();
-                        CharSequence text = "Succesfly login!";
-                        int duration = Toast.LENGTH_SHORT;
-
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
-
-                    } else {
-
-                        Context context = getApplicationContext();
-                        CharSequence text = "Failed Login!";
-                        int duration = Toast.LENGTH_SHORT;
-
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
-
-                    }
-                }*/
 
             }
         });
@@ -111,14 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void addUser(){
-        User newuser = new User(null, "vania", "vania@gmail.com", "12345");
 
-
-       gesdatabase.addUser(newuser);
-
-
-    }
 
 
     private boolean isValidEmail(String email) {
