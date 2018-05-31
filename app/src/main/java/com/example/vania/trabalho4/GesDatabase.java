@@ -27,12 +27,13 @@ public class GesDatabase {
     }
 
 
-    public boolean insertDespesa(String tipoDespesa, Double valorDespesa, String dataDespesa, String horaDespesa, String anexoDespesa){
+    public boolean insertDespesa(Integer _idUser, String tipoDespesa, Double valorDespesa, String dataDespesa, String horaDespesa, String anexoDespesa){
         ContentValues valores;
         long resultado;
 
         database = dbHelper.getWritableDatabase();
         valores = new ContentValues();
+        valores.put("_idUser", _idUser);
         valores.put("tipoDespesa", tipoDespesa);
         valores.put("valorDespesa", valorDespesa);
         valores.put("dataDespesa", dataDespesa);
@@ -77,24 +78,11 @@ public class GesDatabase {
         return database.delete("despesas", whereClause, whereArgs);
     }
 
-    public Cursor obterResumoDespesas() {
-        String[] colunas = new String[4];
-        colunas[0] = "_idDespesa";
-        colunas[1] = "tipoDespesa";
-        colunas[2] = "valorDespesa";
-        colunas[3] = "dataDespesa";
-        return database.query("despesas", colunas, null, null, null, null, null, null);
-    }
+    public Cursor obterResumoDespesas(Integer _idUser) {
 
-    public Cursor obterTodosRegistos() {
-        String[] colunas = new String[6];
-        colunas[0] = "_idDespesa";
-        colunas[1] = "tipoDespesa";
-        colunas[2] = "valorDespesa";
-        colunas[3] = "dataDespesa";
-        colunas[4] = "horaDespesa";
-        colunas[5] = "anexoDespesa";
-        return database.query("despesas", colunas, null, null, null, null, null, null);
+        Cursor cursor = database.rawQuery(
+                "select _idDespesa, tipoDespesa, valorDespesa, dataDespesa from despesas where _idUser=?", new String[] { _idUser.toString() });
+        return cursor;
     }
 
 

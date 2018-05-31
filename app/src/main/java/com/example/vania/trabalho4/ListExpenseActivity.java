@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -52,10 +53,14 @@ public class ListExpenseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_expense);
 
 
+        Session session = new Session(getApplicationContext());
+        Log.v("teste", session.getIdUser().toString());
+
+
         listView = (ListView) findViewById(R.id.list);
 
         gesDatabase = new GesDatabase(this).open();
-        cursor = gesDatabase.obterResumoDespesas();
+        cursor = gesDatabase.obterResumoDespesas(session.getIdUser());
 
         arrIdDespesa = new ArrayList<>();
         lista_despesas = new ArrayList<>();

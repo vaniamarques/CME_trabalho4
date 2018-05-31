@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,6 +28,7 @@ public class AddExpenseActivity extends AppCompatActivity {
     protected List<String> arrTipoDespesa;
     protected Integer pos;
     protected String tipoDespesa;
+    protected Session session;
 
     @Override
     protected void onStart() {
@@ -47,6 +49,9 @@ public class AddExpenseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
+
+        session = new Session(getApplicationContext());
+        Log.v("teste", session.getIdUser().toString());
 
 
         edtValorDespesa = (EditText)findViewById(R.id.edtValorDespesa);
@@ -73,7 +78,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
                 if(validaCampos(edtValorDespesa, edtDataDespesa, edtHoraDespesa)){
 
-                    Boolean resultado = gesDatabase.insertDespesa(spinner.getSelectedItem().toString(), Double.parseDouble(edtValorDespesa.getText().toString()), edtDataDespesa.getText().toString(), edtHoraDespesa.getText().toString(), "");
+                    Boolean resultado = gesDatabase.insertDespesa(session.getIdUser(), spinner.getSelectedItem().toString(), Double.parseDouble(edtValorDespesa.getText().toString()), edtDataDespesa.getText().toString(), edtHoraDespesa.getText().toString(), "");
 
                     String[] arrMensagem = {"Erro ao inserir a despesa!", "Despesa inserida com sucesso!"};
                     if (resultado) {

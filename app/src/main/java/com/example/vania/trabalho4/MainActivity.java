@@ -75,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
                     User currentUser = gesdatabase.Authenticate(new User(null, null, Email, Password));
                     if(currentUser!=null) {
+                        Session session = new Session(getApplicationContext());
+
+                        session.setIdUser(Integer.parseInt(currentUser.id));
+
                         Intent intent = new Intent(MainActivity.this, ListExpenseActivity.class);
                         startActivity(intent);
                     }
