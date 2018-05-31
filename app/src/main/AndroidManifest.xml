@@ -18,7 +18,9 @@
         </activity>
         <activity android:name=".AddExpenseActivity" />
         <activity android:name=".ListExpenseActivity" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".EditExpenseActivity" />
+        <activity android:name=".ViewExpense"></activity>
     </application>
 
 </manifest>

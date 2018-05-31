@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class GenerateDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "baseDados.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 3;
 
     public GenerateDatabase(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -16,7 +16,7 @@ public class GenerateDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String create_table_expenses = "CREATE TABLE despesas(_idDespesas integer primary key autoincrement, tipoDespesa varchar(40), valorDespesa double, dataDespesa varchar(10), horaDespesa varchar(5), anexoDespesa varchar(255))";
+        String create_table_expenses = "CREATE TABLE despesas(_idDespesa integer primary key autoincrement, tipoDespesa varchar(40), valorDespesa double, dataDespesa varchar(10), horaDespesa varchar(5), anexoDespesa varchar(255))";
 
         String create_table_users = "CREATE TABLE users (id integer primary key autoincrement, username varchar(40), email varchar(255), password varchar(255))";
 

@@ -1,10 +1,11 @@
 package com.example.vania.trabalho4;
 
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,14 +16,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddExpenseActivity extends AppCompatActivity {
-
+public class EditExpenseActivity extends AppCompatActivity {
     protected Intent oIntent;
     protected GesDatabase gesDatabase;
     protected Cursor cursor;
-    protected Integer indexDespesa;
-    protected Button btnAdd;
+    protected Button btnGuardar;
     protected EditText edtValorDespesa, edtDataDespesa, edtHoraDespesa;
+    protected Integer indexDespesa;
     protected Spinner spinner;
     protected List<String> arrTipoDespesa;
     protected Integer pos;
@@ -33,9 +33,11 @@ public class AddExpenseActivity extends AppCompatActivity {
         super.onStart();
         gesDatabase = new GesDatabase(this).open();
     }
+
     protected void onPause() {
         super.onPause();
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -46,12 +48,14 @@ public class AddExpenseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_expense);
+        setContentView(R.layout.activity_edit_expense);
 
+        oIntent = getIntent();
+        indexDespesa = oIntent.getExtras().getInt("indexDespesa");
 
-        edtValorDespesa = (EditText)findViewById(R.id.edtValorDespesa);
-        edtDataDespesa = (EditText)findViewById(R.id.edtDataDespesa);
-        edtHoraDespesa = (EditText)findViewById(R.id.edtHoraDespesa);
+        edtValorDespesa = (EditText) findViewById(R.id.edtValorDespesa);
+        edtDataDespesa = (EditText) findViewById(R.id.edtDataDespesa);
+        edtHoraDespesa = (EditText) findViewById(R.id.edtHoraDespesa);
         spinner = (Spinner) findViewById(R.id.spinnerTipoDespesa);
 
         arrTipoDespesa = new ArrayList<String>();
@@ -60,39 +64,99 @@ public class AddExpenseActivity extends AppCompatActivity {
         arrTipoDespesa.add("Portagens");
         arrTipoDespesa.add("Outra");
 
+        gesDatabase = new GesDatabase(this).open();
+
+        cursor = gesDatabase.obterDespesaEspecifica(indexDespesa);
+        if (cursor.moveToFirst()) {
+            tipoDespesa = cursor.getString(1);
+            edtValorDespesa.setText(""+cursor.getDouble(2));
+            edtDataDespesa.setText(cursor.getString(3));
+            edtHoraDespesa.setText(cursor.getString(4));
+        }
+
+        pos = arrTipoDespesa.indexOf(tipoDespesa);
+
         ArrayAdapter<String> oAdaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrTipoDespesa);
         oAdaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(oAdaptador);
+        spinner.setSelection(pos);
 
-        gesDatabase = new GesDatabase(this).open();
 
-        btnAdd = (Button)findViewById(R.id.btnAdd);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+
+
+        btnGuardar = (Button) findViewById(R.id.btnGuardar);
+        btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(validaCampos(edtValorDespesa, edtDataDespesa, edtHoraDespesa)){
 
-                    Boolean resultado = gesDatabase.insertDespesa(spinner.getSelectedItem().toString(), Double.parseDouble(edtValorDespesa.getText().toString()), edtDataDespesa.getText().toString(), edtHoraDespesa.getText().toString(), "");
+                if (validaCampos(edtValorDespesa, edtDataDespesa, edtHoraDespesa)) {
 
-                    String[] arrMensagem = {"Erro ao inserir a despesa!", "Despesa inserida com sucesso!"};
+
+                    spinner.getSelectedItem();
+
+
+                    Boolean resultado = gesDatabase.updateDespesa(indexDespesa, spinner.getSelectedItem().toString(), Double.parseDouble(edtValorDespesa.getText().toString()), edtDataDespesa.getText().toString(), edtHoraDespesa.getText().toString(), "");
+
+                    String[] arrMensagem = {"Erro ao guardar!", "Guardado com sucesso!"};
+
                     if (resultado) {
                         showToast(arrMensagem[1]);
-                        edtValorDespesa.setText("");
-                        edtDataDespesa.setText("");
-                        edtHoraDespesa.setText("");
-                        executarActivity(ListExpenseActivity.class);
+
+                        executarActivity(ViewExpense.class, indexDespesa);
+
+
                     } else {
                         showToast(arrMensagem[0]);
                     }
                 }
+
             }
         });
 
-
-
     }
 
+    protected Boolean validaCampos(EditText edtValorDespesa, EditText edtDataDespesa, EditText edtHoraDespesa) {
+        Boolean b = false;
+        if (edtValorDespesa.getText().toString().equals("")) {
+            edtValorDespesa.requestFocus();
+            showToast("Campo Valor obrigatório!");
+        }
+        else if(edtDataDespesa.getText().toString().equals("")) {
+            edtDataDespesa.requestFocus();
+            showToast("Campo Data obrigatório!");
+        }
+        else if(edtHoraDespesa.getText().toString().equals("")) {
+            edtHoraDespesa.requestFocus();
+            showToast("Campo Valor obrigatório!");
+        }
+        else
+            b = true;
+
+        return b;
+    }
+
+    protected void showToast(String mensagem) {
+        Context context = getApplicationContext();
+        CharSequence text = mensagem;
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        executarActivity(ViewExpense.class, indexDespesa);
+        finish();
+        super.onBackPressed();
+    }
+
+    protected void executarActivity(Class<?> subAtividade, Integer indexDespesa){
+        Intent x = new Intent(this, subAtividade);
+        x.putExtra("indexDespesa", indexDespesa);
+        startActivity(x);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outputState) {
@@ -143,52 +207,5 @@ public class AddExpenseActivity extends AppCompatActivity {
         Integer idDespesa = savedInstanceState.getInt("indexDespesa");
         if (indexDespesa!=null)
             indexDespesa = idDespesa;
-    }
-
-    protected void showToast(String mensagem){
-        Context context = getApplicationContext();
-        CharSequence text = mensagem;
-        int duration = Toast.LENGTH_LONG;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-    }
-
-    protected Boolean validaCampos(EditText edtValorDespesa, EditText edtDataDespesa, EditText edtHoraDespesa) {
-        Boolean b = false;
-        if (edtValorDespesa.getText().toString().equals("")) {
-            edtValorDespesa.requestFocus();
-            showToast("Campo Valor obrigatório!");
-        }
-        else if(edtDataDespesa.getText().toString().equals("")) {
-            edtDataDespesa.requestFocus();
-            showToast("Campo Data obrigatório!");
-        }
-        else if(edtHoraDespesa.getText().toString().equals("")) {
-            edtHoraDespesa.requestFocus();
-            showToast("Campo Valor obrigatório!");
-        }
-        else
-            b = true;
-
-        return b;
-    }
-
-    @Override
-    public void onBackPressed() {
-        executarActivity(ListExpenseActivity.class);
-        finish();
-        super.onBackPressed();
-    }
-
-    protected void executarActivity(Class<?> subAtividade){
-        Intent x = new Intent(this, subAtividade);
-        startActivity(x);
-    }
-
-    protected void executarActivity(Class<?> subAtividade, Integer indexCategoria){
-        Intent x = new Intent(this, subAtividade);
-        x.putExtra("indexCategoria", indexCategoria);
-        startActivity(x);
     }
 }

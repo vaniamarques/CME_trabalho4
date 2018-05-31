@@ -26,6 +26,7 @@ public class GesDatabase {
         dbHelper.close();
     }
 
+
     public boolean insertDespesa(String tipoDespesa, Double valorDespesa, String dataDespesa, String horaDespesa, String anexoDespesa){
         ContentValues valores;
         long resultado;
@@ -69,7 +70,12 @@ public class GesDatabase {
             return true;
     }
 
-
+    public int deleteDespesa(Integer index) {
+        String whereClause = "_idDespesa = ?";
+        String[] whereArgs = new String[1];
+        whereArgs[0] = ""+index;
+        return database.delete("despesas", whereClause, whereArgs);
+    }
 
     public Cursor obterResumoDespesas() {
         String[] colunas = new String[4];
@@ -95,13 +101,8 @@ public class GesDatabase {
     public Cursor obterDespesaEspecifica(Integer index){
         Cursor cursor = database.rawQuery(
                 "select _idDespesa, tipoDespesa, valorDespesa, dataDespesa, horaDespesa, anexoDespesa from despesas where _idDespesa=?", new String[] { index.toString() });
-
-
         return cursor;
-
     }
-
-
     public void addUser(User user) {
 
         Log.d("Utilizador", user.email.toString());
