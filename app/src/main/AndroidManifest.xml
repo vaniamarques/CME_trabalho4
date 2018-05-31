@@ -20,7 +20,8 @@
         <activity android:name=".ListExpenseActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".EditExpenseActivity" />
-        <activity android:name=".ViewExpense"></activity>
+        <activity android:name=".ViewExpense" />
+        <activity android:name=".SendExpense"></activity>
     </application>
 
 </manifest>
