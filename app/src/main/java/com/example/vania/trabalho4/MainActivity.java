@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
+
         //set click event of login button
 
 
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override

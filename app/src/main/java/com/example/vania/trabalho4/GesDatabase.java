@@ -106,7 +106,24 @@ public class GesDatabase {
         db.close();
     }
 
+    public boolean updateUser(User user){
+        String whereClause = "id = ?";
+        String[] whereArgs = new String[1];
+        whereArgs[0] = new Integer(user.id).toString();
 
+        ContentValues values = new ContentValues();
+        values.put("username", user.userName);
+        values.put("email", user.email);
+        values.put("password", user.password);
+
+        long resultado = database.update("users", values, whereClause, whereArgs);
+
+
+        if (resultado ==-1)
+            return false;
+        else
+            return true;
+    }
 
     public Cursor obterTodosUsers() {
         String[] colunas = new String[4];
