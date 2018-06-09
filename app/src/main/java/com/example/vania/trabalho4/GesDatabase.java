@@ -27,7 +27,7 @@ public class GesDatabase {
     }
 
 
-    public boolean insertDespesa(Integer _idUser, String tipoDespesa, Double valorDespesa, String dataDespesa, String horaDespesa, String anexoDespesa){
+    public boolean insertDespesa(Integer _idUser, String tipoDespesa, Double valorDespesa, String dataDespesa, String horaDespesa, byte[] anexoDespesa){
         ContentValues valores;
         long resultado;
 
@@ -50,7 +50,7 @@ public class GesDatabase {
 
     }
 
-    public boolean updateDespesa(Integer _idDespesa, String tipoDespesa, Double valorDespesa, String dataDespesa, String horaDespesa, String anexoDespesa){
+    public boolean updateDespesa(Integer _idDespesa, String tipoDespesa, Double valorDespesa, String dataDespesa, String horaDespesa, byte[] anexoDespesa){
         String whereClause = "_idDespesa = ?";
         String[] whereArgs = new String[1];
         whereArgs[0] = new Integer(_idDespesa).toString();
@@ -88,9 +88,10 @@ public class GesDatabase {
 
     public Cursor obterDespesaEspecifica(Integer index){
         Cursor cursor = database.rawQuery(
-                "select _idDespesa, tipoDespesa, valorDespesa, dataDespesa, horaDespesa, anexoDespesa from despesas where _idDespesa=?", new String[] { index.toString() });
+                "select _idDespesa, tipoDespesa, valorDespesa, dataDespesa, horaDespesa, anexoDespesa  from despesas where _idDespesa=? Limit 1", new String[] { index.toString() });
         return cursor;
     }
+
     public void addUser(User user) {
 
         Log.d("Utilizador", user.email.toString());

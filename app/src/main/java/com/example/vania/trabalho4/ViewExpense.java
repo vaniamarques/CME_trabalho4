@@ -1,5 +1,10 @@
 package com.example.vania.trabalho4;
 
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.Activity;
@@ -10,8 +15,12 @@ import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 
 public class ViewExpense extends AppCompatActivity {
@@ -23,6 +32,7 @@ public class ViewExpense extends AppCompatActivity {
     protected Button btnEditar, btnEliminar;
     protected TextView txvTipoDespesa, txvValorDespesa, txvDataDespesa, txvHoraDespesa;
     protected final Context context = this;
+    protected ImageView imageView;
 
     @Override
     protected void onStart() {
@@ -54,6 +64,7 @@ public class ViewExpense extends AppCompatActivity {
         txvValorDespesa = (TextView)findViewById(R.id.txvValorDespesa);
         txvDataDespesa = (TextView)findViewById(R.id.txvDataDespesa);
         txvHoraDespesa = (TextView)findViewById(R.id.txvHoraDespesa);
+        imageView = (ImageView)findViewById(R.id.imageView);
 
         cursor = null;
         gesDatabase = new GesDatabase(this).open();
@@ -61,6 +72,13 @@ public class ViewExpense extends AppCompatActivity {
 
         cursor = gesDatabase.obterDespesaEspecifica(indexDespesa);
         if (cursor.moveToFirst()) {
+
+            byte[] image = cursor.getBlob(5);
+
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+            imageView.setImageBitmap(bitmap);
+            imageView.setVisibility(View.VISIBLE);
+
             txvTipoDespesa.setText("Tipo Despesa: "+cursor.getString(1));
             txvValorDespesa.setText("Valor: "+cursor.getDouble(2));
             txvDataDespesa.setText("Data: "+cursor.getString(3));
@@ -102,6 +120,41 @@ public class ViewExpense extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if(requestCode == 888){
+            if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, 888);
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == 888 && resultCode == RESULT_OK && data != null){
+            Uri uri = data.getData();
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(uri);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                //imageView.setImageBitmap(bitmap);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

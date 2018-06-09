@@ -18,6 +18,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText editTextEmail, editTextPassword, editTextUsername;
     GenerateDatabase sqliteHelper;
     GesDatabase gesdatabase;
+    TextView txvVoltar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         editTextEmail = (EditText) findViewById(R.id.register_email);
         editTextPassword = (EditText) findViewById(R.id.register_password);
         editTextUsername = (EditText) findViewById(R.id.register_username);
+        txvVoltar = (TextView)findViewById(R.id.txvVoltar);
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +76,14 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
 
+            }
+        });
+
+        txvVoltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent x = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(x);
             }
         });
 

@@ -1,10 +1,18 @@
 package com.example.vania.trabalho4;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,10 +21,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -27,7 +37,7 @@ public class AddExpenseActivity extends AppCompatActivity {
     protected GesDatabase gesDatabase;
     protected Cursor cursor;
     protected Integer indexDespesa;
-    protected Button btnAdd;
+    protected Button btnAdd, btnChoose;
     protected EditText edtValorDespesa, edtDataDespesa, edtHoraDespesa;
     protected Spinner spinner;
     protected List<String> arrTipoDespesa;
@@ -35,6 +45,10 @@ public class AddExpenseActivity extends AppCompatActivity {
     protected String tipoDespesa;
     protected Session session;
     private int mYear, mMonth, mDay, mHour, mMinute;
+    protected ImageView imageView;
+    private Bitmap bp;
+
+    final int REQUEST_CODE_GALLERY = 999;
 
     @Override
     protected void onStart() {
@@ -60,6 +74,7 @@ public class AddExpenseActivity extends AppCompatActivity {
         Log.v("teste", session.getIdUser().toString());
 
 
+        imageView = (ImageView)findViewById(R.id.imageView);
         edtValorDespesa = (EditText)findViewById(R.id.edtValorDespesa);
         edtDataDespesa = (EditText)findViewById(R.id.edtDataDespesa);
         edtHoraDespesa = (EditText)findViewById(R.id.edtHoraDespesa);
@@ -116,7 +131,8 @@ public class AddExpenseActivity extends AppCompatActivity {
 
                 if(validaCampos(edtValorDespesa, edtDataDespesa, edtHoraDespesa)){
 
-                    Boolean resultado = gesDatabase.insertDespesa(session.getIdUser(), spinner.getSelectedItem().toString(), Double.parseDouble(edtValorDespesa.getText().toString()), edtDataDespesa.getText().toString(), edtHoraDespesa.getText().toString(), "");
+                    showToast(imageViewToByte(imageView).toString());
+                    Boolean resultado = gesDatabase.insertDespesa(session.getIdUser(), spinner.getSelectedItem().toString(), Double.parseDouble(edtValorDespesa.getText().toString()), edtDataDespesa.getText().toString(), edtHoraDespesa.getText().toString(), imageViewToByte(imageView));
 
                     String[] arrMensagem = {"Erro ao inserir a despesa!", "Despesa inserida com sucesso!"};
                     if (resultado) {
@@ -133,7 +149,103 @@ public class AddExpenseActivity extends AppCompatActivity {
         });
 
 
+        btnChoose = (Button)findViewById(R.id.btnChoose);
+        btnChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityCompat.requestPermissions(
+                        AddExpenseActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_CODE_GALLERY
+                );
+            }
+        });
 
+
+
+    }
+
+    //COnvert and resize our image to 400dp for faster uploading our images to DB
+    protected Bitmap decodeUri(Uri selectedImage, int REQUIRED_SIZE) {
+
+        try {
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o);
+
+            // The new size we want to scale to
+            // final int REQUIRED_SIZE =  size;
+
+            // Find the correct scale value. It should be the power of 2.
+            int width_tmp = o.outWidth, height_tmp = o.outHeight;
+            int scale = 1;
+            while (true) {
+                if (width_tmp / 2 < REQUIRED_SIZE
+                        || height_tmp / 2 < REQUIRED_SIZE) {
+                    break;
+                }
+                width_tmp /= 2;
+                height_tmp /= 2;
+                scale *= 2;
+            }
+
+            // Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static byte[] imageViewToByte(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if(requestCode == REQUEST_CODE_GALLERY){
+            if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, REQUEST_CODE_GALLERY);
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
+            Uri uri = data.getData();
+
+
+            bp=decodeUri(uri, 400);
+
+                /*InputStream inputStream = getContentResolver().openInputStream(bp);
+
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);*/
+            imageView.setImageBitmap(bp);
+            imageView.setVisibility(View.VISIBLE);
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 

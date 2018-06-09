@@ -34,7 +34,7 @@
 
     <EditText
         android:id="@+id/editTextEmail"
-        android:layout_width="0dp"
+        android:layout_width="348dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="173dp"
         android:layout_marginEnd="51dp"
@@ -48,7 +48,10 @@
         android:selectAllOnFocus="false"
         android:singleLine="false"
         android:textColor="@android:color/white"
+        android:textColorHint="@android:color/background_light"
+        android:textColorLink="@color/colorPrimaryDark"
         android:textStyle="italic"
+        android:backgroundTint="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/createAccount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,12 +59,12 @@
 
     <EditText
         android:id="@+id/editTextPassword"
-        android:layout_width="0dp"
+        android:layout_width="353dp"
         android:layout_height="49dp"
         android:layout_marginBottom="43dp"
         android:layout_marginEnd="51dp"
-        android:layout_marginLeft="51dp"
-        android:layout_marginRight="51dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="51dp"
         android:ems="10"
         android:hint="Password"
@@ -69,10 +72,13 @@
         android:selectAllOnFocus="false"
         android:singleLine="false"
         android:textColor="@android:color/white"
+        android:textColorHint="@android:color/background_light"
+        android:textColorLink="@color/colorPrimaryDark"
         android:textStyle="italic"
+        android:backgroundTint="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextEmail"
         app:layout_constraintVertical_bias="1.0" />
@@ -86,7 +92,7 @@
         android:layout_marginLeft="51dp"
         android:layout_marginRight="51dp"
         android:layout_marginStart="51dp"
-        android:background="#bdc3e8"
+        android:background="#eee"
         android:bottomLeftRadius="18dp"
         android:bottomRightRadius="18dp"
         android:text="Login"
@@ -109,18 +115,8 @@
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.544"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
 
-    <Button
-        android:id="@+id/settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Definições"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
