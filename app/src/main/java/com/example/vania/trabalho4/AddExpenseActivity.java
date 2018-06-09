@@ -1,5 +1,7 @@
 package com.example.vania.trabalho4;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,11 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AddExpenseActivity extends AppCompatActivity {
@@ -29,6 +34,7 @@ public class AddExpenseActivity extends AppCompatActivity {
     protected Integer pos;
     protected String tipoDespesa;
     protected Session session;
+    private int mYear, mMonth, mDay, mHour, mMinute;
 
     @Override
     protected void onStart() {
@@ -70,6 +76,38 @@ public class AddExpenseActivity extends AppCompatActivity {
         spinner.setAdapter(oAdaptador);
 
         gesDatabase = new GesDatabase(this).open();
+
+
+        edtDataDespesa.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DatePicker();
+            }
+        });
+
+        edtDataDespesa.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    DatePicker();
+                }
+            }
+        });
+
+        edtHoraDespesa.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                TimePicker();
+            }
+        });
+
+        edtHoraDespesa.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    TimePicker();
+                }
+            }
+        });
+
 
         btnAdd = (Button)findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +215,50 @@ public class AddExpenseActivity extends AppCompatActivity {
             b = true;
 
         return b;
+    }
+
+    public void DatePicker(){
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+
+                        edtDataDespesa.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
+    }
+
+    public void TimePicker() {
+
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+
+                        edtHoraDespesa.setText(hourOfDay + ":" + minute);
+                    }
+                }, mHour, mMinute, true);
+        timePickerDialog.show();
+
     }
 
     @Override
