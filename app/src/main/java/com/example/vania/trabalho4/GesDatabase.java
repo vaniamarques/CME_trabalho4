@@ -125,6 +125,24 @@ public class GesDatabase {
             return true;
     }
 
+    public boolean updatePassword(String password, String email){
+        String whereClause = "email = ?";
+        String[] whereArgs = new String[1];
+        whereArgs[0] = email.toString();
+
+        ContentValues values = new ContentValues();
+        values.put("password", password);
+
+        long resultado = database.update("users", values, whereClause, whereArgs);
+
+
+        if (resultado ==-1)
+            return false;
+        else
+            return true;
+    }
+
+
     public Cursor obterTodosUsers() {
         String[] colunas = new String[4];
         colunas[0] = "id";

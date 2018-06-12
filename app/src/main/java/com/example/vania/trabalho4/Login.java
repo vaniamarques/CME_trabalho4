@@ -17,7 +17,7 @@ public class Login extends AppCompatActivity {
 
     protected EditText editTextEmail;
     protected EditText editTextPassword;
-    protected TextView createAccount;
+    protected TextView createAccount, recoverPassword;;
     protected Button buttonLogin;
     protected GenerateDatabase sqliteHelper;
     protected GesDatabase gesdatabase;
@@ -36,6 +36,8 @@ public class Login extends AppCompatActivity {
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
+        recoverPassword = (TextView) findViewById(R.id.recoverPassword);
+
 
         //set click event of login button
 
@@ -49,6 +51,17 @@ public class Login extends AppCompatActivity {
 
             }
         });
+        recoverPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, RecoveryActivity.class);
+
+                startActivity(intent);
+
+            }
+        });
+
+
 
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
