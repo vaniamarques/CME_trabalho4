@@ -17,8 +17,8 @@ public class RecoverActivity extends AppCompatActivity {
 
     GenerateDatabase sqliteHelper;
     GesDatabase gesdatabase;
-
-    Context context = getApplicationContext();
+    // dá erro
+    //Context context = getApplicationContext();
     int duration = Toast.LENGTH_SHORT;
 
     @Override
@@ -30,7 +30,7 @@ public class RecoverActivity extends AppCompatActivity {
         sqliteHelper = new GenerateDatabase(this);
 
         editTextEmailRecover = (EditText) findViewById(R.id.editTextPassword);
-        buttonRecover = (Button) findViewById(R.id.buttonLogin);
+        buttonRecover = (Button) findViewById(R.id.buttonRecover);
 
         buttonRecover.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,8 +55,8 @@ public class RecoverActivity extends AppCompatActivity {
                     }
                     else{
                         CharSequence text = "Email nao encontrado!";
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
+                        /*Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();*/
                     }
 
 
