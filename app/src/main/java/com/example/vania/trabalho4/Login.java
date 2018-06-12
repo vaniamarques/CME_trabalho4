@@ -54,7 +54,7 @@ public class Login extends AppCompatActivity {
         recoverPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this, RecoveryActivity.class);
+                Intent intent = new Intent(Login.this, RecoverActivity.class);
 
                 startActivity(intent);
 
