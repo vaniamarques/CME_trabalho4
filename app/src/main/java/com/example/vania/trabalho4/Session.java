@@ -17,8 +17,17 @@ public class Session {
         prefs.edit().putInt("_idUser", id).commit();
     }
 
+    public void setNomeUser(String nomeUser) {
+        prefs.edit().putString("nomeUser", nomeUser).commit();
+    }
+
     public Integer getIdUser() {
         Integer id = prefs.getInt("_idUser",0);
         return id;
+    }
+
+    public String getNomeUser() {
+        String nome = prefs.getString("nomeUser", "");
+        return nome;
     }
 }

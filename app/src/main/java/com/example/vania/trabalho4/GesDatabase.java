@@ -1,14 +1,13 @@
 package com.example.vania.trabalho4;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-
 public class GesDatabase {
+
     private GenerateDatabase dbHelper;
     private SQLiteDatabase database;
 
@@ -168,7 +167,4 @@ public class GesDatabase {
 
         return false;
     }
-
-
-
 }

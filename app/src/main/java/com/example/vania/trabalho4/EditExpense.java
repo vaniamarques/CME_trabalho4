@@ -1,19 +1,24 @@
 package com.example.vania.trabalho4;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,7 +31,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditExpenseActivity extends AppCompatActivity {
+public class EditExpense extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+
     protected Intent oIntent;
     protected GesDatabase gesDatabase;
     protected Cursor cursor;
@@ -63,6 +70,18 @@ public class EditExpenseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_expense);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         oIntent = getIntent();
         indexDespesa = oIntent.getExtras().getInt("indexDespesa");
@@ -141,13 +160,47 @@ public class EditExpenseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ActivityCompat.requestPermissions(
-                        EditExpenseActivity.this,
+                        EditExpense.this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         REQUEST_CODE_GALLERY
                 );
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            executarActivity(ViewExpense.class, indexDespesa);
+        }
+    }
+
+
+
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.despesas) {
+            executarActivity(MainActivity.class);
+        } else if (id == R.id.enviar_despesas) {
+            executarActivity(SendExpense.class);
+        } else if (id == R.id.definicoes) {
+            executarActivity(UserSettings.class);
+        } else if (id == R.id.sair) {
+            executarActivity(Login.class);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     //COnvert and resize our image to 400dp for faster uploading our images to DB
@@ -262,16 +315,14 @@ public class EditExpenseActivity extends AppCompatActivity {
         toast.show();
     }
 
-    @Override
-    public void onBackPressed() {
-        executarActivity(ViewExpense.class, indexDespesa);
-        finish();
-        super.onBackPressed();
-    }
-
     protected void executarActivity(Class<?> subAtividade, Integer indexDespesa){
         Intent x = new Intent(this, subAtividade);
         x.putExtra("indexDespesa", indexDespesa);
+        startActivity(x);
+    }
+
+    protected void executarActivity(Class<?> subAtividade){
+        Intent x = new Intent(this, subAtividade);
         startActivity(x);
     }
 

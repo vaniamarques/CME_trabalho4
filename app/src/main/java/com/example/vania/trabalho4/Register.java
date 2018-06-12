@@ -13,12 +13,13 @@ import android.widget.Toast;
 
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends AppCompatActivity {
-    Button buttonRegister;
-    EditText editTextEmail, editTextPassword, editTextUsername;
-    GenerateDatabase sqliteHelper;
-    GesDatabase gesdatabase;
-    TextView txvVoltar;
+public class Register extends AppCompatActivity {
+
+    protected Button buttonRegister;
+    protected EditText editTextEmail, editTextPassword, editTextUsername;
+    protected GenerateDatabase sqliteHelper;
+    protected GesDatabase gesdatabase;
+    protected TextView txvVoltar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +52,14 @@ public class RegisterActivity extends AppCompatActivity {
                     if(!verifica_email){
                         gesdatabase.addUser(newuser);
 
-                            Context context = getApplicationContext();
-                            CharSequence text = "Adicionado com sucesso!";
-                            int duration = Toast.LENGTH_SHORT;
+                        Context context = getApplicationContext();
+                        CharSequence text = "Adicionado com sucesso!";
+                        int duration = Toast.LENGTH_SHORT;
 
-                            Toast toast = Toast.makeText(context, text, duration);
-                            toast.show();
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
 
-                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                        Intent intent = new Intent(Register.this, Login.class);
                         startActivity(intent);
 
                     }
@@ -82,14 +83,11 @@ public class RegisterActivity extends AppCompatActivity {
         txvVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent x = new Intent(getApplicationContext(), MainActivity.class);
+                Intent x = new Intent(getApplicationContext(), Login.class);
                 startActivity(x);
             }
         });
-
     }
-
-
 
     private boolean isValidEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
