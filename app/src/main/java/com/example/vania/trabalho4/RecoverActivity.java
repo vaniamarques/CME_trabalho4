@@ -1,9 +1,9 @@
 package com.example.vania.trabalho4;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,8 +17,6 @@ public class RecoverActivity extends AppCompatActivity {
 
     GenerateDatabase sqliteHelper;
     GesDatabase gesdatabase;
-    // dá erro
-    //Context context = getApplicationContext();
     int duration = Toast.LENGTH_SHORT;
 
     @Override
@@ -26,10 +24,10 @@ public class RecoverActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recover);
 
-        gesdatabase = new GesDatabase(this);
+        gesdatabase = new GesDatabase(this).open();
         sqliteHelper = new GenerateDatabase(this);
 
-        editTextEmailRecover = (EditText) findViewById(R.id.editTextPassword);
+        editTextEmailRecover = (EditText) findViewById(R.id.email);
         buttonRecover = (Button) findViewById(R.id.buttonRecover);
 
         buttonRecover.setOnClickListener(new View.OnClickListener() {
@@ -42,24 +40,21 @@ public class RecoverActivity extends AppCompatActivity {
                 if(verifica_email){
 
                     if( gesdatabase.updatePassword(new_password, email)){
-                        Intent i = new Intent(Intent.ACTION_SEND);
-                        i.setType("message/rfc822");
-                        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email.toString()});
-                        i.putExtra(Intent.EXTRA_SUBJECT, "Recover Password");
-                        i.putExtra(Intent.EXTRA_TEXT   , "A sua nova password Ã© "+new_password);
-                        try {
-                            startActivity(Intent.createChooser(i, "Email enviado com sucesso!!!"));
-                        } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(RecoverActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+
+                        if(SendEmail.main(email, new_password)){
+                            Toast.makeText(RecoverActivity.this, "E-mail enviado!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(RecoverActivity.this, Login.class);
+                            startActivity(intent);
                         }
+
                     }
                     else{
                         CharSequence text = "Email nao encontrado!";
-                        /*Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();*/
                     }
 
 
+                }else{
+                    Toast.makeText(RecoverActivity.this, "E-mail não está registado!", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -69,14 +64,12 @@ public class RecoverActivity extends AppCompatActivity {
 
     private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
 
-    private static String getRandomString(final int sizeOfPasswordString){
+    private static String getRandomString(final int sizeOfRandomString)
+    {
         final Random random=new Random();
-        final StringBuilder sb=new StringBuilder(sizeOfPasswordString);
-
-        for(int i=0;i<sizeOfPasswordString;++i){
+        final StringBuilder sb=new StringBuilder(sizeOfRandomString);
+        for(int i=0;i<sizeOfRandomString;++i)
             sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
-            return sb.toString();
-        }
-        return null;
+        return sb.toString();
     }
 }

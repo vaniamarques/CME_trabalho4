@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+
 public class Session {
 
     private SharedPreferences prefs;

@@ -62,7 +62,10 @@ public class Register extends AppCompatActivity {
                         Intent intent = new Intent(Register.this, Login.class);
                         startActivity(intent);
 
+                    }else{
+                        Toast.makeText(Register.this, "E-mail já registado", Toast.LENGTH_SHORT).show();
                     }
+
 
 
 
