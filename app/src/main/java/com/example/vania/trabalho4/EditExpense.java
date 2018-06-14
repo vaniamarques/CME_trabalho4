@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -46,6 +47,8 @@ public class EditExpense extends AppCompatActivity
     protected String tipoDespesa;
     protected ImageView imageView;
     private Bitmap bp;
+    protected View mHeaderView;
+    private TextView mDrawerHeaderTitle;
 
     final int REQUEST_CODE_GALLERY = 999;
 
@@ -74,6 +77,8 @@ public class EditExpense extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
+        Session session = new Session(getApplicationContext());
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -82,6 +87,10 @@ public class EditExpense extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mHeaderView = navigationView.getHeaderView(0);
+
+        mDrawerHeaderTitle = (TextView) mHeaderView.findViewById(R.id.NomeUser);
+        mDrawerHeaderTitle.setText(session.getNomeUser());
 
         oIntent = getIntent();
         indexDespesa = oIntent.getExtras().getInt("indexDespesa");

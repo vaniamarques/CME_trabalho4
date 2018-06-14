@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class UserSettings extends AppCompatActivity
@@ -24,6 +25,8 @@ public class UserSettings extends AppCompatActivity
     protected GesDatabase gesdatabase;
     //protected Context context = getApplicationContext();
     protected int duration = Toast.LENGTH_SHORT;
+    protected View mHeaderView;
+    private TextView mDrawerHeaderTitle;
 
 
     @Override
@@ -33,6 +36,7 @@ public class UserSettings extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Session session = new Session(getApplicationContext());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -42,7 +46,10 @@ public class UserSettings extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mHeaderView = navigationView.getHeaderView(0);
 
+        mDrawerHeaderTitle = (TextView) mHeaderView.findViewById(R.id.NomeUser);
+        mDrawerHeaderTitle.setText(session.getNomeUser());
 
         gesdatabase = new GesDatabase(this);
 

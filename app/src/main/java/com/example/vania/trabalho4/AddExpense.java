@@ -29,6 +29,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -54,6 +55,8 @@ public class AddExpense extends AppCompatActivity
     private int mYear, mMonth, mDay, mHour, mMinute;
     protected ImageView imageView;
     private Bitmap bp;
+    protected View mHeaderView;
+    private TextView mDrawerHeaderTitle;
 
     final int REQUEST_CODE_GALLERY = 999;
 
@@ -80,6 +83,8 @@ public class AddExpense extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        session = new Session(getApplicationContext());
+        Log.v("teste", session.getIdUser().toString());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -89,10 +94,14 @@ public class AddExpense extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mHeaderView = navigationView.getHeaderView(0);
+
+        mDrawerHeaderTitle = (TextView) mHeaderView.findViewById(R.id.NomeUser);
+        mDrawerHeaderTitle.setText(session.getNomeUser());
 
 
-        session = new Session(getApplicationContext());
-        Log.v("teste", session.getIdUser().toString());
+        /*session = new Session(getApplicationContext());
+        Log.v("teste", session.getIdUser().toString());*/
 
 
         imageView = (ImageView)findViewById(R.id.imageView);

@@ -38,6 +38,8 @@ public class ViewExpense extends AppCompatActivity
     protected TextView txvTipoDespesa, txvValorDespesa, txvDataDespesa, txvHoraDespesa;
     protected final Context context = this;
     protected ImageView imageView;
+    protected View mHeaderView;
+    private TextView mDrawerHeaderTitle;
 
     @Override
     protected void onStart() {
@@ -63,6 +65,8 @@ public class ViewExpense extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
+        Session session = new Session(getApplicationContext());
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -71,6 +75,11 @@ public class ViewExpense extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mHeaderView = navigationView.getHeaderView(0);
+
+        mDrawerHeaderTitle = (TextView) mHeaderView.findViewById(R.id.NomeUser);
+        mDrawerHeaderTitle.setText(session.getNomeUser());
+
 
         oIntent = getIntent();
         indexDespesa = oIntent.getExtras().getInt("indexDespesa");

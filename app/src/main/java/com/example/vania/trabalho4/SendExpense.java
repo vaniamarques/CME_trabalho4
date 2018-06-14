@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -38,6 +39,8 @@ public class SendExpense extends AppCompatActivity
     Uri URI = null;
     private static final int PICK_FROM_GALLERY = 101;
     int columnIndex;
+    protected View mHeaderView;
+    private TextView mDrawerHeaderTitle;
 
 
     @Override
@@ -47,6 +50,7 @@ public class SendExpense extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Session session = new Session(getApplicationContext());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -56,6 +60,10 @@ public class SendExpense extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mHeaderView = navigationView.getHeaderView(0);
+
+        mDrawerHeaderTitle = (TextView) mHeaderView.findViewById(R.id.NomeUser);
+        mDrawerHeaderTitle.setText(session.getNomeUser());
 
 
         et_email = (EditText) findViewById(R.id.et_to);
